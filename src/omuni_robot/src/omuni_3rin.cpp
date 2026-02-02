@@ -1,4 +1,4 @@
-#include <rclcpp/rclcpp.hpp> // うまくいけるかな。
+#include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joy.hpp>
 #include "robomas_package_2/msg/motor_cmd_array.hpp"
 #include "robomas_package_2/msg/motor_cmd.hpp"
@@ -9,7 +9,7 @@
 #include <array>
 #include <cmath>
 //#include <numbers> C++20以降の機能なので使えない
-#include <map> 
+#include <map>
 
 class Omuni3Rin : public rclcpp::Node
 {
@@ -21,6 +21,9 @@ public:
     }
 
 private:
+
+/*
+    const double PI = std::numbers::pi;
     const double PI = 3.14159265;
     // 機械的パラメータ
     std::array<double,3> motor_id = {1,3,4};
@@ -41,6 +44,7 @@ private:
         }
         return arr;
     }
+*/
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg){
         if(msg->buttons[6]){
             // 非常停止モードへ
@@ -68,7 +72,7 @@ private:
 // [1] 左スティック Y軸
 //     上: -1 / 下: +1
 // です。READMEにもメモっておきました。
-        double x = msg->axes[0]*1000.0f; //左スティックX軸(右向きを正)
+/*        double x = msg->axes[0]*1000.0f; //左スティックX軸(右向きを正)
         double y = -(msg->axes[1]*1000.0f); //左スティックY軸(上向きを正としている)
         
         for (auto wheel: wheel_velocities(x,y)){
@@ -92,6 +96,32 @@ private:
             out.cmds.push_back(cmd);
         }
 
+        
+
+*/
+
+        float cos = msg->axes[0]; //左スティックX
+        float sin = -(msg->axes[1]); //左スティックY
+
+        //とりますべて速度制御(mode = 1)
+
+        //motor1
+        cmd.id = 1;
+        cmd.mode = 1;
+        cmd.value = (-0.5f * cos + 0.866f * sin) * 1000.0f;
+        out.cmds.push_back(cmd);
+
+        //motor2
+        cmd.id = 2;
+        cmd.mode = 1;
+        cmd.value = (-0.5f * cos - 0.866f * sin) * 1000.0f;
+        out.cmds.push_back(cmd);
+
+        //motor3
+        cmd.id = 3;
+        cmd.mode = 1;
+        cmd.value = cos * 1000.0f;
+        out.cmds.push_back(cmd);
 
       /*  if(msg->buttons[1] && !msg->buttons[0]){
             cmd.id = 4;
