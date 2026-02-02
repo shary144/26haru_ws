@@ -1,4 +1,4 @@
-#include <rclcpp/rclcpp.hpp> // 私が来ました。
+#include <rclcpp/rclcpp.hpp> // watasigakita
 #include <sensor_msgs/msg/joy.hpp>
 #include "robomas_package_2/msg/motor_cmd_array.hpp"
 #include "robomas_package_2/msg/motor_cmd.hpp"
